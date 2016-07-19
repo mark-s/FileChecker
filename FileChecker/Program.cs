@@ -35,6 +35,7 @@ namespace FileChecker
             var mainRunner = bootstrapper.GetMainRunner();
             mainRunner.Go();
 
+            Console.Write("Press enter to close");
             Console.ReadLine();
         }
 
