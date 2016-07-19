@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 
 namespace FileChecker.Entities
 {
@@ -9,6 +10,16 @@ namespace FileChecker.Entities
 
         public byte[] LeftFileHash { get; set; }
         public byte[] RightFileHash { get; set; }
+
+        public string LeftFileHashString
+        {
+            get { return BitConverter.ToString(LeftFileHash); }
+        }
+
+        public string RightFileHashString
+        {
+            get { return BitConverter.ToString(RightFileHash); }
+        }
 
         public bool AreHashesEqual
         {

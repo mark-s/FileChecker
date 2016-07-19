@@ -34,6 +34,8 @@ namespace FileChecker
             // Let's get to work
             var mainRunner = bootstrapper.GetMainRunner();
             mainRunner.Go();
+
+            Console.ReadLine();
         }
 
         private static void InitLogging()

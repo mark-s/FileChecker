@@ -31,7 +31,9 @@ namespace FileChecker
              _container.Register<ISession, Session>(Lifestyle.Singleton);
              _container.Register<IFileHashService, FileHashService>(Lifestyle.Singleton);
              _container.Register<IFileListService, FileListService>(Lifestyle.Singleton);
-             
+             _container.Register<IFileItemNameComparer, FileItemNameComparer>(Lifestyle.Singleton);
+             _container.Register<IOutputResults, ResultsConsoleWriter>(Lifestyle.Singleton);
+            
 
             LogTo.Info("Registering Services - END");
         }

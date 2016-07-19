@@ -10,14 +10,22 @@ namespace FileChecker
         private readonly ISession _session;
         private readonly IFileListService _fileListService;
         private readonly IFileHashService _fileHashService;
+        private readonly IFileItemNameComparer _nameComparer;
+        private readonly IOutputResults _outputResultService;
 
         private readonly List<FilePair> _filePairs = new List<FilePair>();
 
-        public FileCheckerMain(ISession session, IFileListService fileListService, IFileHashService fileHashService)
+        public FileCheckerMain(ISession session, 
+                                         IFileListService fileListService, 
+                                         IFileHashService fileHashService,
+                                         IFileItemNameComparer nameComparer,
+                                         IOutputResults outputResultService)
         {
             _session = session;
             _fileListService = fileListService;
             _fileHashService = fileHashService;
+            _nameComparer = nameComparer;
+            _outputResultService = outputResultService;
         }
 
         public void Go()
@@ -27,6 +35,7 @@ namespace FileChecker
 
             PopulateFileHashValues();
 
+            _outputResultService.ProduceResults(_filePairs);
         }
 
         private void PopulateFilePairList()
@@ -40,10 +49,11 @@ namespace FileChecker
 
             foreach (var leftSideFile in leftSideFiles)
             {
+                
                 var pair = new FilePair
                 {
                     LeftFile = leftSideFile,
-                    RightFile = rightSideFiles.FirstOrDefault(rightFile => rightFile.Equals(leftSideFile)),
+                    RightFile = rightSideFiles.FirstOrDefault(rightFile => _nameComparer.Compare(leftSideFile, rightFile)),
                 };
  
                 _filePairs.Add(pair);
