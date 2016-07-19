@@ -4,7 +4,7 @@ namespace FileChecker.Services
 {
     public class Session : ISession
     {
-        public FileCheckerUserArgs UserArgs { get; set; }
+        public ComparisonSettings Settings { get; set; }
 
     }
 }

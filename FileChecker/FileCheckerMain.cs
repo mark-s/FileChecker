@@ -2,6 +2,7 @@
 using System.Linq;
 using FileChecker.Entities;
 using FileChecker.Services;
+using FileChecker.Services.ResultOutputters;
 
 namespace FileChecker
 {
@@ -41,10 +42,10 @@ namespace FileChecker
         private void PopulateFilePairList()
         {
             // get left side list of files
-            var leftSideFiles = _fileListService.GetFileList(_session.UserArgs.PathToCheckLeft).ToList();
+            var leftSideFiles = _fileListService.GetFileList(_session.Settings.PathToCheckLeft).ToList();
 
             // get right side list of files
-            var rightSideFiles = _fileListService.GetFileList(_session.UserArgs.PathToCheckRight).ToList();
+            var rightSideFiles = _fileListService.GetFileList(_session.Settings.PathToCheckRight).ToList();
 
 
             foreach (var leftSideFile in leftSideFiles)

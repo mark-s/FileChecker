@@ -10,8 +10,8 @@ namespace FileChecker.Services
 
         public IEnumerable<FileItem> GetFileList(string folderPath)
         {
-            var di = new DirectoryInfo(folderPath);
-            return di.EnumerateFiles("*.*", SearchOption.AllDirectories).Select(i => new FileItem(i));
+            var directoryInfo = new DirectoryInfo(folderPath);
+            return directoryInfo.EnumerateFiles("*.*", SearchOption.AllDirectories).Select(i => new FileItem(i));
         }
 
 

@@ -2,11 +2,6 @@
 
 namespace FileChecker.Services
 {
-    public interface IFileItemNameComparer
-    {
-        bool Compare(FileItem leftFile, FileItem rightFile);
-    }
-
     public class FileItemNameComparer : IFileItemNameComparer
     {
         private readonly ISession _session;
@@ -19,8 +14,8 @@ namespace FileChecker.Services
         public bool Compare(FileItem leftFile, FileItem rightFile)
         {
 
-            var filePartToCompareLeft = leftFile.FileInfo.FullName.Replace(_session.UserArgs.PathToCheckLeft, "");
-            var filePartToCompareRight = rightFile.FileInfo.FullName.Replace(_session.UserArgs.PathToCheckRight, "");
+            var filePartToCompareLeft = leftFile.FileInfo.FullName.Replace(_session.Settings.PathToCheckLeft, "");
+            var filePartToCompareRight = rightFile.FileInfo.FullName.Replace(_session.Settings.PathToCheckRight, "");
 
             return filePartToCompareLeft == filePartToCompareRight;
         }

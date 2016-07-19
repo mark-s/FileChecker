@@ -11,8 +11,10 @@ namespace FileChecker.Services
         {
             LogTo.Info("Calculating hash for file\t" + file.FileInfo.FullName);
 
-            var sha1Managed = new SHA1Managed();
-            return sha1Managed.ComputeHash(file.FileInfo.OpenRead());
+            using (var sha1Managed = new SHA1Managed())
+            {
+                return sha1Managed.ComputeHash(file.FileInfo.OpenRead());
+            }
             
         }
 

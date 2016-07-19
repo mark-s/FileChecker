@@ -8,8 +8,10 @@ namespace FileChecker.Entities
         public FileItem LeftFile { get; set; }
         public FileItem RightFile { get; set; }
 
+
         public byte[] LeftFileHash { get; set; }
         public byte[] RightFileHash { get; set; }
+
 
         public string LeftFileHashString
         {
@@ -23,13 +25,8 @@ namespace FileChecker.Entities
 
         public bool AreHashesEqual
         {
-            get { return CompareHashes(); }
+            get { return LeftFileHash.SequenceEqual(RightFileHash); }
         }
 
-
-        private bool CompareHashes()
-        {
-            return LeftFileHash.SequenceEqual(RightFileHash);
-        }
     }
 }

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using FileChecker.Entities;
 
-namespace FileChecker.Services
+namespace FileChecker.Services.ResultOutputters
 {
     public class ResultsConsoleWriter : IOutputResults
     {

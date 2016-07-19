@@ -4,6 +4,6 @@ namespace FileChecker.Services
 {
     public interface IProgramArgumentsParser
     {
-        FileCheckerUserArgs ParseArgs(string[] args);
+        ComparisonSettings ParseArgs(string[] args);
     }
 }

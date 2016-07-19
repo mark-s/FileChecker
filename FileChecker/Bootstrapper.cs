@@ -1,5 +1,6 @@
 ﻿using Anotar.Log4Net;
 using FileChecker.Services;
+using FileChecker.Services.ResultOutputters;
 using SimpleInjector;
 
 namespace FileChecker
@@ -32,8 +33,12 @@ namespace FileChecker
              _container.Register<IFileHashService, FileHashService>(Lifestyle.Singleton);
              _container.Register<IFileListService, FileListService>(Lifestyle.Singleton);
              _container.Register<IFileItemNameComparer, FileItemNameComparer>(Lifestyle.Singleton);
-             _container.Register<IOutputResults, ResultsConsoleWriter>(Lifestyle.Singleton);
-            
+
+            // Console output
+            //_container.Register<IOutputResults, ResultsConsoleWriter>(Lifestyle.Singleton);
+
+            // Disk output
+            _container.Register<IOutputResults, ResultsFileWriter>(Lifestyle.Singleton);
 
             LogTo.Info("Registering Services - END");
         }
@@ -44,7 +49,7 @@ namespace FileChecker
             var parser =  _container.GetInstance<IProgramArgumentsParser>();
             var session = _container.GetInstance<ISession>();
 
-            session.UserArgs = parser.ParseArgs(args);
+            session.Settings = parser.ParseArgs(args);
         }
 
         public IFileCheckerMain GetMainRunner()
