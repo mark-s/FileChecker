@@ -9,7 +9,7 @@ namespace FileChecker.Services
 
         public byte[] GetFileHash(FileItem file)
         {
-            LogTo.Info("Calculating hash for file\t" + file.FileInfo.FullName);
+            LogTo.Info("Calculating hash for file\t" + file.FullName);
 
             using (var sha1Managed = new SHA1Managed())
             {

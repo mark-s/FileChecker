@@ -65,8 +65,8 @@ namespace FileChecker
         {
             foreach (var filePair in _filePairs)
             {
-                filePair.LeftFileHash = _fileHashService.GetFileHash(filePair.LeftFile);
-                filePair.RightFileHash = _fileHashService.GetFileHash(filePair.RightFile);
+                filePair.LeftFile.FileHash = _fileHashService.GetFileHash(filePair.LeftFile);
+                filePair.RightFile.FileHash = _fileHashService.GetFileHash(filePair.RightFile);
             }
 
         }

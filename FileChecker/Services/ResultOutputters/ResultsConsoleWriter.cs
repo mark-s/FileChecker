@@ -12,7 +12,7 @@ namespace FileChecker.Services.ResultOutputters
 
             foreach (var filePair in filePairs)
             {
-                Console.WriteLine(String.Format("{0}\t{1}", filePair.LeftFile.FileInfo.FullName, filePair.RightFile.FileInfo.FullName));
+                Console.WriteLine(String.Format("{0}\t{1}", filePair.LeftFile.FullName, filePair.RightFile.FullName));
                 Console.WriteLine("Are Equal:\t" + filePair.AreHashesEqual);
             }
 

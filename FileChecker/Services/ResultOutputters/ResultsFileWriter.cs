@@ -26,10 +26,10 @@ namespace FileChecker.Services.ResultOutputters
             {
                 sb.AppendLine(String.Format("{0}\t{1}\t{2}\t{3}\t{4}",
                                                             filePair.AreHashesEqual,
-                                                            filePair.LeftFile.FileInfo.FullName,
-                                                            filePair.RightFile.FileInfo.FullName,
-                                                            filePair.LeftFileHashString,
-                                                            filePair.RightFileHashString));
+                                                            filePair.LeftFile.FullName,
+                                                            filePair.RightFile.FullName,
+                                                            filePair.LeftFile.FileHashString,
+                                                            filePair.RightFile.FileHashString));
             }
 
             File.WriteAllText(_session.Settings.ResultsOutputFilePath, sb.ToString(), Encoding.UTF8);
