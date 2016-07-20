@@ -10,6 +10,9 @@ namespace FileChecker.Entities
 
         public byte[] FileHash { get; set; }
 
+        public bool IsInLeftSide { get; set; }
+        public bool IsInRightSide { get; set; }
+
         public string FileHashString
         {
             get { return BitConverter.ToString(FileHash); }

@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using FileChecker.Entities;
 using FileChecker.Services;
 using FileChecker.Services.ResultOutputters;
@@ -11,63 +12,47 @@ namespace FileChecker
         private readonly ISession _session;
         private readonly IFileListService _fileListService;
         private readonly IFileHashService _fileHashService;
-        private readonly IFileItemNameComparer _nameComparer;
         private readonly IOutputResults _outputResultService;
 
-        private readonly List<FilePair> _filePairs = new List<FilePair>();
 
-        public FileCheckerMain(ISession session, 
-                                         IFileListService fileListService, 
+        public FileCheckerMain(ISession session,
+                                         IFileListService fileListService,
                                          IFileHashService fileHashService,
-                                         IFileItemNameComparer nameComparer,
                                          IOutputResults outputResultService)
         {
             _session = session;
             _fileListService = fileListService;
             _fileHashService = fileHashService;
-            _nameComparer = nameComparer;
             _outputResultService = outputResultService;
         }
 
         public void Go()
         {
+            _fileListService.PopulateFileList(_session.Settings.PathToCheckLeft, _session.Settings.PathToCheckRight);
 
-            PopulateFilePairList();
+            var filePairs = _fileListService.GetFilesInBothSides().OrderBy(i => i.RightFile.FullName).ToList();
 
-            PopulateFileHashValues();
+            PopulateFileHashValues(filePairs);
 
-            _outputResultService.ProduceResults(_filePairs);
+            _outputResultService.DeleteExistingResults();
+
+            _outputResultService.ProduceDiff(filePairs, _session.Settings.OnlyShowDiffs, "File Comparsion");
+
+            var filesOnlyInLeft = _fileListService.GetFilesOnlyInLeftSide();
+            _outputResultService.ProduceListOfFiles(filesOnlyInLeft.ToList(), "Files Missing From Right");
+
+            var filesOnlyInRight = _fileListService.GetFilesOnlyInRightSide();
+            _outputResultService.ProduceListOfFiles(filesOnlyInRight.ToList(), "Files Missing From Left");
         }
 
-        private void PopulateFilePairList()
+
+        private void PopulateFileHashValues(IEnumerable<FilePair> filePairs)
         {
-            // get left side list of files
-            var leftSideFiles = _fileListService.GetFileList(_session.Settings.PathToCheckLeft).ToList();
-
-            // get right side list of files
-            var rightSideFiles = _fileListService.GetFileList(_session.Settings.PathToCheckRight).ToList();
-
-
-            foreach (var leftSideFile in leftSideFiles)
+            Parallel.ForEach(filePairs, pair =>
             {
-                
-                var pair = new FilePair
-                {
-                    LeftFile = leftSideFile,
-                    RightFile = rightSideFiles.FirstOrDefault(rightFile => _nameComparer.Compare(leftSideFile, rightFile)),
-                };
- 
-                _filePairs.Add(pair);
-            }
-        }
-
-        private void PopulateFileHashValues()
-        {
-            foreach (var filePair in _filePairs)
-            {
-                filePair.LeftFile.FileHash = _fileHashService.GetFileHash(filePair.LeftFile);
-                filePair.RightFile.FileHash = _fileHashService.GetFileHash(filePair.RightFile);
-            }
+                pair.LeftFile.FileHash = _fileHashService.GetFileHash(pair.LeftFile);
+                pair.RightFile.FileHash = _fileHashService.GetFileHash(pair.RightFile);
+            });
 
         }
     }

@@ -11,13 +11,17 @@ namespace FileChecker.Services
             _session = session;
         }
 
-        public bool Compare(FileItem leftFile, FileItem rightFile)
+        public bool IsNameAndPathTheSame(FileItem leftFile, FileItem rightFile)
         {
-
-            var filePartToCompareLeft = leftFile.FileInfo.FullName.Replace(_session.Settings.PathToCheckLeft, "");
-            var filePartToCompareRight = rightFile.FileInfo.FullName.Replace(_session.Settings.PathToCheckRight, "");
+            var filePartToCompareLeft = GetPartOfPathToCompare(leftFile.FileInfo.FullName, _session.Settings.PathToCheckLeft);
+            var filePartToCompareRight = GetPartOfPathToCompare(rightFile.FileInfo.FullName, _session.Settings.PathToCheckRight);
 
             return filePartToCompareLeft == filePartToCompareRight;
+        }
+
+        private string GetPartOfPathToCompare(string fullPathOfFile, string fullPathFromSettings)
+        {
+            return fullPathOfFile.Replace(fullPathFromSettings, "");
         }
 
     }

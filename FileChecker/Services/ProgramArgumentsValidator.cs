@@ -8,12 +8,15 @@ namespace FileChecker.Services
 {
     public class ProgramArgumentsValidator : IProgramArgumentsValidator
     {
+
+
+
         public ArgsValidationResult ValidateArgs(IList<string> args)
         {
             var isValid = true;
             var message = "";
 
-            if (args.Count != 3)
+            if (args.Count != 4)
             {
                 isValid = false;
                 message = GetUsageText();
@@ -40,7 +43,7 @@ namespace FileChecker.Services
 
         private  string GetUsageText()
         {
-            return "USAGE: FileChecker \"LEFT SIDE PATHTOCHECK\" \"RIGHT SIDE PATHTOCHECK\" \"OUTPUT.TXT\"";
+            return "USAGE: FileChecker \"LEFT SIDE PATHTOCHECK\" \"RIGHT SIDE PATHTOCHECK\" \"OUTPUT.TXT\" TRUE\\FALSE (diffs Only)";
         }
     }
 }

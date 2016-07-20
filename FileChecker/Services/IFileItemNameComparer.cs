@@ -2,8 +2,8 @@
 
 namespace FileChecker.Services
 {
-    public interface IFileItemNameComparer
+    public interface IFileItemNameComparer 
     {
-        bool Compare(FileItem leftFile, FileItem rightFile);
+        bool IsNameAndPathTheSame(FileItem leftFile, FileItem rightFile);
     }
 }
