@@ -61,16 +61,15 @@
     <Compile Include="Entities\ArgsValidationResult.cs" />
     <Compile Include="Entities\ComparisonSettings.cs" />
     <Compile Include="Entities\FileItem.cs" />
+    <Compile Include="Entities\FileItemComparer.cs" />
     <Compile Include="Entities\FilePair.cs" />
     <Compile Include="FileCheckerMain.cs" />
     <Compile Include="IFileCheckerMain.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Services\IFileItemNameComparer.cs" />
     <Compile Include="Services\ResultOutputters\IOutputResults.cs" />
     <Compile Include="Services\ResultOutputters\ResultsConsoleWriter.cs" />
     <Compile Include="Services\FileHashService.cs" />
-    <Compile Include="Services\FileItemNameComparer.cs" />
     <Compile Include="Services\FileListService.cs" />
     <Compile Include="Services\IFileHashService.cs" />
     <Compile Include="Services\IFileListService.cs" />

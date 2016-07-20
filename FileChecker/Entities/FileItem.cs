@@ -8,6 +8,8 @@ namespace FileChecker.Entities
         public FileInfo FileInfo { get; private set; }
         public string FullName { get; private set; }
 
+        public string FileNamePartForComparison { get; private set; }
+
         public byte[] FileHash { get; set; }
 
         public bool IsInLeftSide { get; set; }
@@ -18,11 +20,13 @@ namespace FileChecker.Entities
             get { return BitConverter.ToString(FileHash); }
         }
 
-        public FileItem(FileInfo fileInfo)
+        public FileItem(FileInfo fileInfo, string basePathToExclude)
         {
             FileInfo = fileInfo;
 
             FullName = FileInfo.FullName;
+
+            FileNamePartForComparison = FileInfo.FullName.Replace(basePathToExclude , "");
         }
 
     }

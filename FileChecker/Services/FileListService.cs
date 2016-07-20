@@ -10,24 +10,24 @@ namespace FileChecker.Services
 {
     public class FileListService : IFileListService
     {
-        private readonly IFileItemNameComparer _nameComparer;
+        private readonly ISession _session;
         private ReadOnlyCollection<FileItem> _leftSideFiles;
         private ReadOnlyCollection<FileItem> _rightSideFiles;
+        private FileItemComparer _comparer;
 
-
-
-        public FileListService(IFileItemNameComparer nameComparer)
+        public FileListService(ISession session)
         {
-            _nameComparer = nameComparer;
+            _session = session;
+            _comparer = new FileItemComparer();
         }
 
         public void PopulateFileList(string leftFolderPath, string rightFolderPath)
         {
             // get left side list of files
-            _leftSideFiles = GetFileList(leftFolderPath).OrderBy(f => f.FullName).ToList().AsReadOnly();
+            _leftSideFiles = GetFileList(leftFolderPath, _session.Settings.PathToCheckLeft).OrderBy(f => f.FullName).ToList().AsReadOnly();
 
             // get right side list of files
-            _rightSideFiles = GetFileList(rightFolderPath).OrderBy(f => f.FullName).ToList().AsReadOnly();
+            _rightSideFiles = GetFileList(rightFolderPath, _session.Settings.PathToCheckRight).OrderBy(f => f.FullName).ToList().AsReadOnly();
         }
 
 
@@ -36,36 +36,30 @@ namespace FileChecker.Services
         {
             Validate();
 
-            foreach (var leftSideFile in _leftSideFiles)
-            {
-                var rightSideFile = _rightSideFiles.FirstOrDefault(rightFile => _nameComparer.IsNameAndPathTheSame(leftSideFile, rightFile));
+            return from leftFile in _leftSideFiles
+                   join rightFile in _rightSideFiles on leftFile.FileNamePartForComparison equals rightFile.FileNamePartForComparison
+                   select new FilePair(leftFile, rightFile);
 
-                if (rightSideFile == null)
-                    continue;
-
-                yield return new FilePair(leftSideFile, rightSideFile);
-              
-            }
         }
 
 
         public IEnumerable<FileItem> GetFilesOnlyInLeftSide()
         {
             Validate();
-            return _leftSideFiles.Where(a => !_rightSideFiles.Select(b => b.FileInfo.Name).Contains(a.FileInfo.Name));
+            return _leftSideFiles.Except(_rightSideFiles, _comparer);
         }
 
         public IEnumerable<FileItem> GetFilesOnlyInRightSide()
         {
             Validate();
-            return _rightSideFiles.Where(a => !_leftSideFiles.Select(b => b.FileInfo.Name).Contains(a.FileInfo.Name));
+            return _rightSideFiles.Except(_leftSideFiles, _comparer);
         }
 
 
-        private IEnumerable<FileItem> GetFileList(string folderPath)
+        private IEnumerable<FileItem> GetFileList(string folderPath, string baseFolderPath)
         {
             var directoryInfo = new DirectoryInfo(folderPath);
-            return directoryInfo.EnumerateFiles("*.*", SearchOption.AllDirectories).AsParallel().Select(i => new FileItem(i));
+            return directoryInfo.EnumerateFiles("*.*", SearchOption.AllDirectories).AsParallel().Select(i => new FileItem(i, baseFolderPath));
         }
 
         private void Validate()

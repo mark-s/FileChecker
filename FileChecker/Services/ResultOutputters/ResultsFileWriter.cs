@@ -29,8 +29,8 @@ namespace FileChecker.Services.ResultOutputters
             LogTo.Info("Writing Results to\t" + _session.Settings.ResultsOutputFilePath);
 
             var sb = new StringBuilder();
-            sb.AppendLine(title);
             sb.AppendLine();
+            sb.AppendLine(title);
             sb.AppendLine("Is Same\tLeft File\tRight File\tLeft Hash\tRight Hash");
 
             if (onlyShowDifferences)
@@ -63,13 +63,11 @@ namespace FileChecker.Services.ResultOutputters
         public void ProduceListOfFiles(IList<FileItem> fileList, string title)
         {
             var sb = new StringBuilder();
-            sb.AppendLine(title);
             sb.AppendLine();
+            sb.AppendLine(title);
 
             foreach (var fileItem in fileList)
-            {
-                sb.AppendLine(fileItem.FullName);
-            }
+                sb.AppendLine(fileItem.FileNamePartForComparison);
 
             File.AppendAllText(_session.Settings.ResultsOutputFilePath, sb.ToString(), Encoding.UTF8);
         }

@@ -30,7 +30,7 @@ namespace FileChecker
         {
             _fileListService.PopulateFileList(_session.Settings.PathToCheckLeft, _session.Settings.PathToCheckRight);
 
-            var filePairs = _fileListService.GetFilesInBothSides().OrderBy(i => i.RightFile.FullName).ToList();
+            var filePairs = _fileListService.GetFilesInBothSides().ToList();
 
             PopulateFileHashValues(filePairs);
 
@@ -48,6 +48,7 @@ namespace FileChecker
 
         private void PopulateFileHashValues(IEnumerable<FilePair> filePairs)
         {
+
             Parallel.ForEach(filePairs, pair =>
             {
                 pair.LeftFile.FileHash = _fileHashService.GetFileHash(pair.LeftFile);
