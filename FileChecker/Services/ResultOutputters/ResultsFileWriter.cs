@@ -18,18 +18,17 @@ namespace FileChecker.Services.ResultOutputters
         }
 
 
-        public void DeleteExistingResults()
+        public void RemoveExistingResults()
         {
             if (File.Exists(_session.Settings.ResultsOutputFile))
                 File.Delete(_session.Settings.ResultsOutputFile);
         }
 
-        public void ProduceDiff(IList<FilePair> filePairs, bool onlyShowDifferences, string title)
+        public void OutputFileContentDiffs(IList<FilePair> filePairs, bool onlyShowDifferences, string title)
         {
             LogTo.Info("Writing Results to\t" + _session.Settings.ResultsOutputFile);
 
             var sb = new StringBuilder();
-            sb.AppendLine();
             sb.AppendLine(title);
             sb.AppendLine("Is Same\tLeft File\tRight File\tLeft Hash\tRight Hash");
 
@@ -60,10 +59,9 @@ namespace FileChecker.Services.ResultOutputters
             LogTo.Info("Writing Results - End");
         }
 
-        public void ProduceListOfFiles(IList<FileItem> fileList, string title)
+        public void OutputFolderDiffs(IList<FileItem> fileList, string title)
         {
             var sb = new StringBuilder();
-            sb.AppendLine();
             sb.AppendLine(title);
 
             foreach (var fileItem in fileList)

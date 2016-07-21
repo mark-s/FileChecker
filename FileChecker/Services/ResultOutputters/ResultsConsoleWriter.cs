@@ -9,12 +9,12 @@ namespace FileChecker.Services.ResultOutputters
     {
 
 
-        public void DeleteExistingResults()
+        public void RemoveExistingResults()
         {
             Console.Clear();
         }
 
-        public void ProduceDiff(IList<FilePair> filePairs, bool onlyShowDifferences, string title)
+        public void OutputFileContentDiffs(IList<FilePair> filePairs, bool onlyShowDifferences, string title)
         {
             Console.WriteLine(title);
             Console.WriteLine();
@@ -33,7 +33,7 @@ namespace FileChecker.Services.ResultOutputters
                 }
         }
 
-        public void ProduceListOfFiles(IList<FileItem> fileList, string title)
+        public void OutputFolderDiffs(IList<FileItem> fileList, string title)
         {
             Console.WriteLine(title);
             Console.WriteLine();

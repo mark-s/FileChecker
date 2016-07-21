@@ -34,15 +34,15 @@ namespace FileChecker
 
             PopulateFileHashValues(filePairs);
 
-            _outputResultService.DeleteExistingResults();
+            _outputResultService.RemoveExistingResults();
 
-            _outputResultService.ProduceDiff(filePairs, _session.Settings.OnlyShowDiffs, "File Comparsion");
+            _outputResultService.OutputFileContentDiffs(filePairs, _session.Settings.OnlyShowDiffs, "File Comparsion");
 
             var filesOnlyInLeft = _fileListService.GetFilesOnlyInLeftSide();
-            _outputResultService.ProduceListOfFiles(filesOnlyInLeft.ToList(), "Files Missing From Right");
+            _outputResultService.OutputFolderDiffs(filesOnlyInLeft.ToList(), "Files Missing From Right");
 
             var filesOnlyInRight = _fileListService.GetFilesOnlyInRightSide();
-            _outputResultService.ProduceListOfFiles(filesOnlyInRight.ToList(), "Files Missing From Left");
+            _outputResultService.OutputFolderDiffs(filesOnlyInRight.ToList(), "Files Missing From Left");
         }
 
 

@@ -72,7 +72,7 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\ISettingsProvider.cs" />
-    <Compile Include="Services\JSONSettingsLoader.cs" />
+    <Compile Include="Services\JsonSettingsLoader.cs" />
     <Compile Include="Services\ResultOutputters\IOutputResults.cs" />
     <Compile Include="Services\ResultOutputters\ResultsConsoleWriter.cs" />
     <Compile Include="Services\FileHashService.cs" />
