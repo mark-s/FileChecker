@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
-using System.Xml.Schema;
 using FileChecker.Entities;
 
 namespace FileChecker.Services
@@ -13,12 +12,12 @@ namespace FileChecker.Services
         private readonly ISession _session;
         private ReadOnlyCollection<FileItem> _leftSideFiles;
         private ReadOnlyCollection<FileItem> _rightSideFiles;
-        private FileItemComparer _comparer;
+        private readonly IEqualityComparer<FileItem> _comparer;
 
-        public FileListService(ISession session)
+        public FileListService(ISession session, IEqualityComparer<FileItem> comparer)
         {
             _session = session;
-            _comparer = new FileItemComparer();
+            _comparer = comparer;
         }
 
         public void PopulateFileList(string leftFolderPath, string rightFolderPath)
@@ -31,7 +30,6 @@ namespace FileChecker.Services
         }
 
 
-
         public IEnumerable<FilePair> GetFilesInBothSides()
         {
             Validate();
@@ -41,7 +39,6 @@ namespace FileChecker.Services
                    select new FilePair(leftFile, rightFile);
 
         }
-
 
         public IEnumerable<FileItem> GetFilesOnlyInLeftSide()
         {

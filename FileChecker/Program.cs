@@ -13,13 +13,15 @@ namespace FileChecker
         {
             InitLogging();
 
-            // Check the arguments - bail out with error message if they're bad
+            // Check the arguments, before we do anything else - bail out with error message if they're bad
             var validator = new ProgramArgumentsValidator();
             var validationResult = validator.ValidateArgs(args);
             if (validationResult.IsValid == false)
             {
                 Console.WriteLine(validationResult.Message);
-                Console.ReadLine();
+
+                PromptForClose();
+
                 return;
             }
 
@@ -33,10 +35,18 @@ namespace FileChecker
 
             // Let's get to work
             var mainRunner = bootstrapper.GetMainRunner();
-            mainRunner.Go();
 
-            Console.Write("Press enter to close");
-            Console.ReadLine();
+            try
+            {
+                mainRunner.Go();
+            }
+            catch (Exception ex)
+            {
+                LogTo.FatalException("Exception!", ex);
+                // TODO: maybe send an email here if configured ...
+            }
+
+            PromptForClose();
         }
 
         private static void InitLogging()
@@ -46,6 +56,14 @@ namespace FileChecker
            LogTo.Info("START!");
         }
 
+
+        // this is DEBUG only because this is destined to run on a headless server
+        [Conditional("DEBUG")]
+        private static void PromptForClose()
+        {
+            Console.Write("Press enter to close");
+            Console.ReadLine();
+        }
 
     }
 }

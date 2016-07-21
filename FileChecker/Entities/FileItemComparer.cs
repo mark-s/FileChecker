@@ -1,5 +1,6 @@
 ﻿namespace FileChecker.Entities
 {
+    // custom comparer to make the LINQ easy
     public class FileItemComparer : System.Collections.Generic.IEqualityComparer<FileItem>
     {
         public bool Equals(FileItem f1, FileItem f2)

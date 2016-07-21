@@ -1,23 +1,24 @@
-﻿using Anotar.Log4Net;
-using FileChecker.Entities;
+﻿using System;
 
 namespace FileChecker.Services
 {
     public class ProgramArgumentsParser : IProgramArgumentsParser
     {
+        private readonly IProgramArgumentsValidator _validator;
 
-        public ComparisonSettings ParseArgs(string[] args)
+        public ProgramArgumentsParser(IProgramArgumentsValidator validator)
         {
-            LogTo.Info("Parsing arguments");
-
-            var onlyShowDiffs = ParseBool(args[3]);
-
-            return new ComparisonSettings(args[0], args[1], args[2], onlyShowDiffs);
+            _validator = validator;
         }
 
-        private bool ParseBool(string s)
+        public string GetSettingsFileLocation(string[] args)
         {
-            return s.ToUpperInvariant() == "TRUE";
+            // this should have already been validated, but just to make sure let's do it again
+            if (_validator.ValidateArgs(args).IsValid == false)
+                throw new ArgumentException("passed in arguments are invalid!", "args");
+
+            return args[0];
+
         }
     }
 }

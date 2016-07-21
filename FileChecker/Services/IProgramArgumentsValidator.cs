@@ -5,6 +5,6 @@ namespace FileChecker.Services
 {
     public interface IProgramArgumentsValidator
     {
-        ArgsValidationResult ValidateArgs(IList<string> args);
+        ValidationResult ValidateArgs(IList<string> args);
     }
 }

@@ -1,0 +1,9 @@
+{
+   "PathToCheckLeft": "C:\\Dev\\DynamicData",
+   "PathToCheckRight":  "C:\\Dev\\DynamicData - Copy",
+   "ResultsOutputFile":  "C:\\Dev\\Projects\\FileChecker\\result.txt",
+   "OnlyShowDiffs":  false,
+   "SendEmailWhenDone":  true,
+   "EmailTo":  "mark@nomura.com",
+   "EmailServer":  "127.0.0.1"
+}

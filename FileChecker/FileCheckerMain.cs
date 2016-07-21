@@ -48,11 +48,10 @@ namespace FileChecker
 
         private void PopulateFileHashValues(IEnumerable<FilePair> filePairs)
         {
-
             Parallel.ForEach(filePairs, pair =>
             {
-                pair.LeftFile.FileHash = _fileHashService.GetFileHash(pair.LeftFile);
-                pair.RightFile.FileHash = _fileHashService.GetFileHash(pair.RightFile);
+                pair.LeftFile.FileContentHash = _fileHashService.GetFileHash(pair.LeftFile);
+                pair.RightFile.FileContentHash = _fileHashService.GetFileHash(pair.RightFile);
             });
 
         }

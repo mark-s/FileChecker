@@ -1,9 +1,8 @@
-﻿using FileChecker.Entities;
-
-namespace FileChecker.Services
+﻿namespace FileChecker.Services
 {
     public interface IProgramArgumentsParser
     {
-        ComparisonSettings ParseArgs(string[] args);
+       
+        string GetSettingsFileLocation(string[] args);
     }
 }

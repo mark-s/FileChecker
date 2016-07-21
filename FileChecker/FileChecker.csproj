@@ -44,6 +44,10 @@
       <HintPath>..\packages\log4net.2.0.5\lib\net40-full\log4net.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="Newtonsoft.Json, Version=9.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.9.0.1\lib\net40\Newtonsoft.Json.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="SimpleInjector, Version=3.2.0.0, Culture=neutral, PublicKeyToken=984cb50dea722e99, processorArchitecture=MSIL">
       <HintPath>..\packages\SimpleInjector.3.2.0\lib\net40-client\SimpleInjector.dll</HintPath>
       <Private>True</Private>
@@ -58,7 +62,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Bootstrapper.cs" />
-    <Compile Include="Entities\ArgsValidationResult.cs" />
+    <Compile Include="Entities\ValidationResult.cs" />
     <Compile Include="Entities\ComparisonSettings.cs" />
     <Compile Include="Entities\FileItem.cs" />
     <Compile Include="Entities\FileItemComparer.cs" />
@@ -67,6 +71,8 @@
     <Compile Include="IFileCheckerMain.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Services\ISettingsProvider.cs" />
+    <Compile Include="Services\JSONSettingsLoader.cs" />
     <Compile Include="Services\ResultOutputters\IOutputResults.cs" />
     <Compile Include="Services\ResultOutputters\ResultsConsoleWriter.cs" />
     <Compile Include="Services\FileHashService.cs" />
@@ -85,9 +91,6 @@
     <Content Include="App.config">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <SubType>Designer</SubType>
-    </Content>
-    <Content Include="Configs\DEV.App.config">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Configs\Log4Net.DEV.config">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>

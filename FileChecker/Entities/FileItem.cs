@@ -10,15 +10,13 @@ namespace FileChecker.Entities
 
         public string FileNamePartForComparison { get; private set; }
 
-        public byte[] FileHash { get; set; }
-
-        public bool IsInLeftSide { get; set; }
-        public bool IsInRightSide { get; set; }
-
-        public string FileHashString
+        public byte[] FileContentHash { get; set; }
+        public string FileContentHashString
         {
-            get { return BitConverter.ToString(FileHash); }
+            // strip out the default BitConverter's '-'s
+            get { return BitConverter.ToString(FileContentHash).Replace("-",""); }
         }
+
 
         public FileItem(FileInfo fileInfo, string basePathToExclude)
         {

@@ -20,13 +20,13 @@ namespace FileChecker.Services.ResultOutputters
 
         public void DeleteExistingResults()
         {
-            if (File.Exists(_session.Settings.ResultsOutputFilePath))
-                File.Delete(_session.Settings.ResultsOutputFilePath);
+            if (File.Exists(_session.Settings.ResultsOutputFile))
+                File.Delete(_session.Settings.ResultsOutputFile);
         }
 
         public void ProduceDiff(IList<FilePair> filePairs, bool onlyShowDifferences, string title)
         {
-            LogTo.Info("Writing Results to\t" + _session.Settings.ResultsOutputFilePath);
+            LogTo.Info("Writing Results to\t" + _session.Settings.ResultsOutputFile);
 
             var sb = new StringBuilder();
             sb.AppendLine();
@@ -40,8 +40,8 @@ namespace FileChecker.Services.ResultOutputters
                                                                 filePair.AreHashesEqual,
                                                                 filePair.LeftFile.FullName,
                                                                 filePair.RightFile.FullName,
-                                                                filePair.LeftFile.FileHashString,
-                                                                filePair.RightFile.FileHashString));
+                                                                filePair.LeftFile.FileContentHashString,
+                                                                filePair.RightFile.FileContentHashString));
                 }
             else
                 foreach (var filePair in filePairs)
@@ -50,12 +50,12 @@ namespace FileChecker.Services.ResultOutputters
                                                                 filePair.AreHashesEqual,
                                                                 filePair.LeftFile.FullName,
                                                                 filePair.RightFile.FullName,
-                                                                filePair.LeftFile.FileHashString,
-                                                                filePair.RightFile.FileHashString));
+                                                                filePair.LeftFile.FileContentHashString,
+                                                                filePair.RightFile.FileContentHashString));
                 }
 
 
-            File.AppendAllText(_session.Settings.ResultsOutputFilePath, sb.ToString(), Encoding.UTF8);
+            File.AppendAllText(_session.Settings.ResultsOutputFile, sb.ToString(), Encoding.UTF8);
 
             LogTo.Info("Writing Results - End");
         }
@@ -69,7 +69,7 @@ namespace FileChecker.Services.ResultOutputters
             foreach (var fileItem in fileList)
                 sb.AppendLine(fileItem.FileNamePartForComparison);
 
-            File.AppendAllText(_session.Settings.ResultsOutputFilePath, sb.ToString(), Encoding.UTF8);
+            File.AppendAllText(_session.Settings.ResultsOutputFile, sb.ToString(), Encoding.UTF8);
         }
     }
 }

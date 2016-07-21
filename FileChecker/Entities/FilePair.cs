@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 
 namespace FileChecker.Entities
 {
@@ -9,12 +10,18 @@ namespace FileChecker.Entities
 
         public bool AreHashesEqual
         {
-            get { return LeftFile.FileHash.SequenceEqual(RightFile.FileHash); }
+            get
+            {
+                return LeftFile.FileContentHash.SequenceEqual(RightFile.FileContentHash);
+            }
         }
 
 
         public FilePair(FileItem leftFile, FileItem rightFile)
         {
+            if (leftFile == null) throw new ArgumentNullException("leftFile", "Required!");
+            if (rightFile == null) throw new ArgumentNullException("rightFile", "Required!");
+
             LeftFile = leftFile;
             RightFile = rightFile;
         }
