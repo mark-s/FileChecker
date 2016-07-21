@@ -19,9 +19,7 @@ namespace FileChecker
             if (validationResult.IsValid == false)
             {
                 Console.WriteLine(validationResult.Message);
-
                 PromptForClose();
-
                 return;
             }
 
@@ -31,7 +29,12 @@ namespace FileChecker
             // pass it into the boostrapper for population and populate it!
             var bootstrapper = new Bootstrapper(container);
             bootstrapper.Run();
-            bootstrapper.SetProgramConfig(args);
+
+            // actually parse the program args
+            var settings = bootstrapper.SetProgramConfig(args);
+
+            // setup the output(s) as required by the args
+            bootstrapper.SetupOutput(settings);
 
             // Let's get to work
             var mainRunner = bootstrapper.GetMainRunner();
@@ -53,7 +56,7 @@ namespace FileChecker
         {
             // Init the logging provider
             XmlConfigurator.Configure();
-           LogTo.Info("START!");
+            LogTo.Info("START!");
         }
 
 

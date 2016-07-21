@@ -10,23 +10,23 @@ namespace FileChecker.Services.ResultOutputters
 {
     public class ResultsFileWriter : IOutputResults
     {
-        private readonly ISession _session;
+        private readonly ComparisonSettings _settings;
 
-        public ResultsFileWriter(ISession session)
+        public ResultsFileWriter(ComparisonSettings settings)
         {
-            _session = session;
+            _settings = settings;
         }
 
 
         public void RemoveExistingResults()
         {
-            if (File.Exists(_session.Settings.ResultsOutputFile))
-                File.Delete(_session.Settings.ResultsOutputFile);
+            if (File.Exists(_settings.ResultsOutputFile))
+                File.Delete(_settings.ResultsOutputFile);
         }
 
         public void OutputFileContentDiffs(IList<FilePair> filePairs, bool onlyShowDifferences, string title)
         {
-            LogTo.Info("Writing Results to\t" + _session.Settings.ResultsOutputFile);
+            LogTo.Info("Writing Results to\t" + _settings.ResultsOutputFile);
 
             var sb = new StringBuilder();
             sb.AppendLine(title);
@@ -54,7 +54,7 @@ namespace FileChecker.Services.ResultOutputters
                 }
 
 
-            File.AppendAllText(_session.Settings.ResultsOutputFile, sb.ToString(), Encoding.UTF8);
+            File.AppendAllText(_settings.ResultsOutputFile, sb.ToString(), Encoding.UTF8);
 
             LogTo.Info("Writing Results - End");
         }
@@ -67,7 +67,7 @@ namespace FileChecker.Services.ResultOutputters
             foreach (var fileItem in fileList)
                 sb.AppendLine(fileItem.FileNamePartForComparison);
 
-            File.AppendAllText(_session.Settings.ResultsOutputFile, sb.ToString(), Encoding.UTF8);
+            File.AppendAllText(_settings.ResultsOutputFile, sb.ToString(), Encoding.UTF8);
         }
     }
 }

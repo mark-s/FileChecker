@@ -3,7 +3,7 @@
    "PathToCheckRight":  "C:\\Dev\\DynamicData - Copy",
    "ResultsOutputFile":  "C:\\Dev\\Projects\\FileChecker\\result.txt",
    "OnlyShowDiffs":  false,
-   "SendEmailWhenDone":  true,
+   "SendEmailWhenDone":  false,
    "EmailTo":  "mark@nomura.com",
    "EmailServer":  "127.0.0.1"
 }

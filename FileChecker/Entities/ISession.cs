@@ -1,6 +1,4 @@
-﻿using FileChecker.Entities;
-
-namespace FileChecker.Services
+﻿namespace FileChecker.Entities
 {
     public interface ISession
     {

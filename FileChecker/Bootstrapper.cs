@@ -36,17 +36,12 @@ namespace FileChecker
              _container.Register<IFileHashService, FileHashService>(Lifestyle.Singleton);
              _container.Register<IEqualityComparer<FileItem>, FileItemComparer>(Lifestyle.Singleton);
              _container.Register<IFileListService, FileListService>(Lifestyle.Singleton);
+             _container.Register<IResultsOutputService, ResultsOutputService>(Lifestyle.Singleton);
             
-            // Console output
-            //_container.Register<IOutputResults, ResultsConsoleWriter>(Lifestyle.Singleton);
-
-            // Disk output
-            _container.Register<IOutputResults, ResultsFileWriter>(Lifestyle.Singleton);
-
             LogTo.Info("Registering Services - END");
         }
 
-        public void SetProgramConfig(string[] args)
+        public ComparisonSettings SetProgramConfig(string[] args)
         {
             // parse the args to get the settings file location 
             var parser =  _container.GetInstance<IProgramArgumentsParser>();
@@ -56,6 +51,18 @@ namespace FileChecker
             var settingsLoader = new JsonSettingsLoader();
             var session = _container.GetInstance<ISession>();
             session.Settings = settingsLoader.GetStoredSettings(settingsFile);
+
+            return session.Settings;
+        }
+
+        public void SetupOutput(ComparisonSettings settings)
+        {
+            var outputService =_container.GetInstance<IResultsOutputService>();
+            outputService.AddOutputter(new ResultsConsoleWriter());
+            outputService.AddOutputter(new ResultsFileWriter(settings));
+
+            if (settings.SendEmailWhenDone)
+                outputService.AddOutputter(new EmailSender(settings));
         }
 
         public IFileCheckerMain GetMainRunner()
