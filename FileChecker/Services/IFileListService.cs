@@ -7,10 +7,10 @@ namespace FileChecker.Services
     {
         void PopulateFileList(ComparisonSettings settings);
 
-        IEnumerable<FilePair> GetFilesInBothSides();
+        IList<FilePair> GetFilesInBothSides();
 
-        IEnumerable<FileItem> GetFilesOnlyInLeftSide();
+        IList<FileItem> GetFilesOnlyInLeftSide();
 
-        IEnumerable<FileItem> GetFilesOnlyInRightSide();
+        IList<FileItem> GetFilesOnlyInRightSide();
     }
 }

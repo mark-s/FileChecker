@@ -27,11 +27,12 @@ namespace FileChecker
         {
             _fileListService.PopulateFileList(settings);
 
+            // this is 
             var filePairs = _fileListService.GetFilesInBothSides().ToList();
             PopulateFileHashValues(filePairs);
 
-            var filesOnlyInLeft = _fileListService.GetFilesOnlyInLeftSide().ToList();
-            var filesOnlyInRight = _fileListService.GetFilesOnlyInRightSide().ToList();
+            var filesOnlyInLeft = _fileListService.GetFilesOnlyInLeftSide();
+            var filesOnlyInRight = _fileListService.GetFilesOnlyInRightSide();
 
             var results = new ComparisonResults(filePairs, filesOnlyInLeft, filesOnlyInRight);
 

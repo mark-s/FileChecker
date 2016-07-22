@@ -28,26 +28,26 @@ namespace FileChecker.Services
         }
 
 
-        public IEnumerable<FilePair> GetFilesInBothSides()
+        public IList<FilePair> GetFilesInBothSides()
         {
             Validate();
 
-            return from leftFile in _leftSideFiles
+            var query =  from leftFile in _leftSideFiles
                    join rightFile in _rightSideFiles on leftFile.FileNamePartForComparison equals rightFile.FileNamePartForComparison
                    select new FilePair(leftFile, rightFile);
-
+            return query.AsParallel().ToList();
         }
 
-        public IEnumerable<FileItem> GetFilesOnlyInLeftSide()
+        public IList<FileItem> GetFilesOnlyInLeftSide()
         {
             Validate();
-            return _leftSideFiles.Except(_rightSideFiles, _comparer);
+            return _leftSideFiles.Except(_rightSideFiles, _comparer).AsParallel().ToList();
         }
 
-        public IEnumerable<FileItem> GetFilesOnlyInRightSide()
+        public IList<FileItem> GetFilesOnlyInRightSide()
         {
             Validate();
-            return _rightSideFiles.Except(_leftSideFiles, _comparer);
+            return _rightSideFiles.Except(_leftSideFiles, _comparer).AsParallel().ToList();
         }
 
 
