@@ -14,11 +14,9 @@ namespace FileChecker.Services
             var isValid = true;
             var message = "";
 
-            if (args.Count != 1)
-            {
-                isValid = false;
-                message = GetUsageText();
-            }
+            // if there's no argument providede - just bail out!
+            if (args.Count != 1) return new ValidationResult(false, GetUsageText());
+        
 
             var settingsFileFileName = args[0];
 
