@@ -3,6 +3,7 @@ using System.Diagnostics;
 using Anotar.Log4Net;
 using FileChecker.Entities;
 using FileChecker.Services;
+using FileChecker.Services.ResultOutputters;
 using log4net.Config;
 using SimpleInjector;
 
@@ -10,6 +11,8 @@ namespace FileChecker
 {
     public class Program
     {
+
+
         public static void Main(string[] args)
         {
             InitLogging();
@@ -25,15 +28,20 @@ namespace FileChecker
             }
 
             // load the config file we got from the command line and validate it's good
-            var settings = LoadSettingsFromSettingsFile(args, new ProgramArgumentsParser(validator),new JsonSettingsLoader());
+            var settings = LoadSettingsFromSettingsFile(args, new ProgramArgumentsParser(validator), new JsonSettingsLoader());
+
+            // setup the output(s) as required by the args so we can output the results of the validation
+            var outputService = SetupOutputService(settings);
 
             var settingsValidationResult = ComparisonSettings.Validate(settings);
             if (settingsValidationResult.IsValid == false)
             {
                 Console.WriteLine(settingsValidationResult.Message);
+                outputService.OutputError(settingsValidationResult.Message);
                 PromptForClose();
                 return;
             }
+            
 
             // Create a new Simple Injector container
             var container = new Container();
@@ -42,27 +50,21 @@ namespace FileChecker
             var bootstrapper = new Bootstrapper(container);
             bootstrapper.Run(settings);
 
-            // setup the output(s) as required by the args
-            bootstrapper.SetupOutput();
-
             // Let's get to work
             var mainRunner = bootstrapper.GetMainRunner();
 
             try
             {
-                mainRunner.Go(settings);
+                mainRunner.RunFileCheck(settings, outputService);
             }
             catch (Exception ex)
             {
                 LogTo.FatalException("Exception!", ex);
-                // TODO: maybe send an email here if configured ...
+                outputService.OutputError(ex.Message);
             }
 
             PromptForClose();
         }
-
-
-
 
 
         public static ComparisonSettings LoadSettingsFromSettingsFile(string[] args, IProgramArgumentsParser argumentsParser, ISettingsProvider<ComparisonSettings> settingsFileLoader)
@@ -71,13 +73,21 @@ namespace FileChecker
             var settingsFileLocation = argumentsParser.GetSettingsFileLocation(args);
 
             // and then load the settings from the file
-            return  settingsFileLoader.GetStoredSettings(settingsFileLocation);
+            return settingsFileLoader.GetStoredSettings(settingsFileLocation);
         }
 
+        public static IResultsOutputService SetupOutputService(ComparisonSettings settings)
+        {
+            var outputService = new ResultsOutputService(new TimeStampService());
 
+            outputService.AddOutputter(new ResultsConsoleWriter());
+            outputService.AddOutputter(new ResultsFileWriter(settings));
 
+            if (settings.SendEmailWhenDone)
+                outputService.AddOutputter(new EmailSender(settings));
 
-
+            return outputService;
+        }
 
 
         private static void InitLogging()

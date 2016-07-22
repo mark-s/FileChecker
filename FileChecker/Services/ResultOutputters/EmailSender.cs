@@ -27,5 +27,15 @@ namespace FileChecker.Services.ResultOutputters
         {
             throw new NotImplementedException();
         }
+
+        public void AddErrorMessage(string message)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void AddTitle(string message)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

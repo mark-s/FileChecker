@@ -1,6 +1,6 @@
 {
-   "PathToCheckLeft": "C:\\Dev\\DynamicData",
-   "PathToCheckRight":  "C:\\Dev\\DynamicData - Copy",
+   "PathToCheckLeft": "C:\\Dev\\Projects\\5.5.0.2",
+   "PathToCheckRight":  "C:\\Dev\\Projects\\5.5.0.2 - Copy",
    "ResultsOutputFile":  "C:\\Dev\\Projects\\FileChecker\\result.txt",
    "OnlyShowDiffs":  true,
    "SendEmailWhenDone":  false,

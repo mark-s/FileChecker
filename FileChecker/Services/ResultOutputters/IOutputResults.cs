@@ -10,5 +10,9 @@ namespace FileChecker.Services.ResultOutputters
         void OutputFileContentDiffs(IList<FilePair> filePairs, bool onlyShowDifferences, string title);
 
         void OutputFolderDiffs(IList<FileItem> fileList, string title);
+
+        void AddErrorMessage(string message);
+
+        void AddTitle(string message);
     }
 }

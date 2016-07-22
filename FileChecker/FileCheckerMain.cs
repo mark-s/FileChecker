@@ -11,24 +11,22 @@ namespace FileChecker
     {
         private readonly IFileListService _fileListService;
         private readonly IFileHashService _fileHashService;
-        private readonly IResultsOutputService _resultsOutputService;
+
 
 
         public FileCheckerMain(IFileListService fileListService,
-                                         IFileHashService fileHashService,
-                                         IResultsOutputService resultsOutputService)
+                                         IFileHashService fileHashService)
         {
             _fileListService = fileListService;
             _fileHashService = fileHashService;
-            _resultsOutputService = resultsOutputService;
         }
 
-        public void Go(ComparisonSettings settings)
+        public void RunFileCheck(ComparisonSettings settings, IResultsOutputService outputService)
         {
             _fileListService.PopulateFileList(settings);
 
-            // this is 
-            var filePairs = _fileListService.GetFilesInBothSides().ToList();
+            // this is not quite the right place for this... 
+            var filePairs = _fileListService.GetFilesInBothSides();
             PopulateFileHashValues(filePairs);
 
             var filesOnlyInLeft = _fileListService.GetFilesOnlyInLeftSide();
@@ -36,7 +34,7 @@ namespace FileChecker
 
             var results = new ComparisonResults(filePairs, filesOnlyInLeft, filesOnlyInRight);
 
-            _resultsOutputService.OutputResults(results, settings);
+            outputService.OutputResults(results, settings);
         }
 
         private void PopulateFileHashValues(IEnumerable<FilePair> filePairs)

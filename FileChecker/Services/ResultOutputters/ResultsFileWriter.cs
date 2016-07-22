@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Xml.Schema;
 using Anotar.Log4Net;
 using FileChecker.Entities;
 
@@ -14,7 +15,15 @@ namespace FileChecker.Services.ResultOutputters
 
         public ResultsFileWriter(ComparisonSettings settings)
         {
+            Validate(settings.ResultsOutputFile);
+
             _settings = settings;
+        }
+
+        private void Validate(string resultsOutputFile)
+        {
+            if (String.IsNullOrEmpty(resultsOutputFile))
+                throw new ArgumentNullException("resultsOutputFile", "Results Output file is required!");
         }
 
 
@@ -54,7 +63,7 @@ namespace FileChecker.Services.ResultOutputters
                 }
 
 
-            File.AppendAllText(_settings.ResultsOutputFile, sb.ToString(), Encoding.UTF8);
+            AppendMessageToFile(sb.ToString());
 
             LogTo.Info("Writing Results - End");
         }
@@ -67,7 +76,32 @@ namespace FileChecker.Services.ResultOutputters
             foreach (var fileItem in fileList)
                 sb.AppendLine(fileItem.FileNamePartForComparison);
 
-            File.AppendAllText(_settings.ResultsOutputFile, sb.ToString(), Encoding.UTF8);
+            AppendMessageToFile(sb.ToString());
         }
+
+        public void AddErrorMessage(string message)
+        {
+            AppendMessageToFile(message);
+        }
+
+        public void AddTitle(string message)
+        { 
+            AppendMessageToFile(message + Environment.NewLine + Environment.NewLine);
+        }
+
+        private void AppendMessageToFile(string message)
+        {
+            try
+            {
+                File.AppendAllText(_settings.ResultsOutputFile, message + Environment.NewLine, Encoding.UTF8);
+            }
+            catch (Exception ex)
+            {
+                // just log this without rethrowing it because a) there might be  no one to handle it
+                // and b) any issues with the log file would have been previously highlighted to the log / user
+                LogTo.FatalException("Failed to write to output file [" + _settings.ResultsOutputFile + "]", ex);
+            }
+        }
+
     }
 }

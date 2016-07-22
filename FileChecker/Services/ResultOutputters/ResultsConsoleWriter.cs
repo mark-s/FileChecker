@@ -41,5 +41,22 @@ namespace FileChecker.Services.ResultOutputters
             foreach (var fileItem in fileList)
                 Console.WriteLine(fileItem.FullName);
         }
+
+        public void AddErrorMessage(string message)
+        {
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.WriteLine(message);
+            Console.WriteLine();
+        }
+
+        public void AddTitle(string message)
+        {
+            Console.ForegroundColor = ConsoleColor.Black;
+            Console.BackgroundColor = ConsoleColor.White;
+            Console.ResetColor();
+            Console.WriteLine(message);
+            Console.WriteLine();
+            
+        }
     }
 }

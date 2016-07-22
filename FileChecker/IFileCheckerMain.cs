@@ -1,9 +1,10 @@
 ﻿using FileChecker.Entities;
+using FileChecker.Services;
 
 namespace FileChecker
 {
     public interface IFileCheckerMain
     {
-        void Go(ComparisonSettings settings);
+        void RunFileCheck(ComparisonSettings settings, IResultsOutputService outputService);
     }
 }
