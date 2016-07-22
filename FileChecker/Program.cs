@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 using Anotar.Log4Net;
+using FileChecker.Entities;
 using FileChecker.Services;
 using log4net.Config;
 using SimpleInjector;
@@ -23,25 +24,33 @@ namespace FileChecker
                 return;
             }
 
+            // load the config file we got from the command line and validate it's good
+            var settings = LoadSettingsFromSettingsFile(args, new ProgramArgumentsParser(validator),new JsonSettingsLoader());
+
+            var settingsValidationResult = ComparisonSettings.Validate(settings);
+            if (settingsValidationResult.IsValid == false)
+            {
+                Console.WriteLine(settingsValidationResult.Message);
+                PromptForClose();
+                return;
+            }
+
             // Create a new Simple Injector container
             var container = new Container();
 
             // pass it into the boostrapper for population and populate it!
             var bootstrapper = new Bootstrapper(container);
-            bootstrapper.Run();
-
-            // actually parse the program args
-            var settings = bootstrapper.SetProgramConfig(args);
+            bootstrapper.Run(settings);
 
             // setup the output(s) as required by the args
-            bootstrapper.SetupOutput(settings);
+            bootstrapper.SetupOutput();
 
             // Let's get to work
             var mainRunner = bootstrapper.GetMainRunner();
 
             try
             {
-                mainRunner.Go();
+                mainRunner.Go(settings);
             }
             catch (Exception ex)
             {
@@ -51,6 +60,25 @@ namespace FileChecker
 
             PromptForClose();
         }
+
+
+
+
+
+        public static ComparisonSettings LoadSettingsFromSettingsFile(string[] args, IProgramArgumentsParser argumentsParser, ISettingsProvider<ComparisonSettings> settingsFileLoader)
+        {
+            // parse the args to get the settings file location 
+            var settingsFileLocation = argumentsParser.GetSettingsFileLocation(args);
+
+            // and then load the settings from the file
+            return  settingsFileLoader.GetStoredSettings(settingsFileLocation);
+        }
+
+
+
+
+
+
 
         private static void InitLogging()
         {

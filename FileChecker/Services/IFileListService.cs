@@ -5,7 +5,7 @@ namespace FileChecker.Services
 {
     public interface IFileListService
     {
-        void PopulateFileList(string leftFolderPath, string rightFolderPath);
+        void PopulateFileList(ComparisonSettings settings);
 
         IEnumerable<FilePair> GetFilesInBothSides();
 

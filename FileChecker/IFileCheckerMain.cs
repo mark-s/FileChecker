@@ -1,7 +1,9 @@
-﻿namespace FileChecker
+﻿using FileChecker.Entities;
+
+namespace FileChecker
 {
     public interface IFileCheckerMain
     {
-        void Go();
+        void Go(ComparisonSettings settings);
     }
 }

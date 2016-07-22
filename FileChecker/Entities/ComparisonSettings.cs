@@ -46,32 +46,32 @@ namespace FileChecker.Entities
         }
 
 
-        public ValidationResult ValidateSettings()
+        public static ValidationResult Validate(ComparisonSettings settings)
         {
             var isValid = true;
             var message = "";
 
 
-            if (Directory.Exists(PathToCheckLeft) == false)
+            if (String.IsNullOrEmpty(settings.PathToCheckLeft) || Directory.Exists(settings.PathToCheckLeft) == false)
             {
                 isValid = false;
-                message += String.Format("Left Side Path to check: [{0}] does not exist!{1}", PathToCheckLeft, Environment.NewLine);
+                message += String.Format("Left Side Path to check: [{0}] is not valid / does not exist!{1}", settings.PathToCheckLeft, Environment.NewLine);
             }
 
-            if (Directory.Exists(PathToCheckRight) == false)
+            if (String.IsNullOrEmpty(settings.PathToCheckRight) || Directory.Exists(settings.PathToCheckRight) == false)
             {
                 isValid = false;
-                message += String.Format("Right Side Path to check: [{0}] does not exist!{1}", PathToCheckRight, Environment.NewLine);
+                message += String.Format("Right Side Path to check: [{0}] is not valid / does not exist!{1}", settings.PathToCheckRight, Environment.NewLine);
             }
 
-            var outputFilePath = Path.GetFullPath(ResultsOutputFile);
-            if (Directory.Exists(outputFilePath) == false)
+            var outputFilePath = Path.GetDirectoryName(settings.ResultsOutputFile);
+            if (String.IsNullOrEmpty(outputFilePath) || Directory.Exists(outputFilePath) == false)
             {
                 isValid = false;
-                message += String.Format("Output File Folder: [{0}] does not exist!{1}", outputFilePath, Environment.NewLine);
+                message += String.Format("Output File Folder: [{0}] is not valid / does not exist!{1}", outputFilePath, Environment.NewLine);
             }
 
-            if (SendEmailWhenDone == true && (String.IsNullOrEmpty(EmailTo) || String.IsNullOrEmpty(EmailServer)))
+            if (settings.SendEmailWhenDone == true && (String.IsNullOrEmpty(settings.EmailTo) || String.IsNullOrEmpty(settings.EmailServer)))
             {
                 isValid = false;
                 message += String.Format("When SendEmailWhenDone is set to true, EmailTo and EmailServer must be set too.{0}", Environment.NewLine);

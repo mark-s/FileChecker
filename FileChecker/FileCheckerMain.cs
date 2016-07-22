@@ -9,26 +9,23 @@ namespace FileChecker
 {
     public class FileCheckerMain : IFileCheckerMain
     {
-        private readonly ISession _session;
         private readonly IFileListService _fileListService;
         private readonly IFileHashService _fileHashService;
         private readonly IResultsOutputService _resultsOutputService;
 
 
-        public FileCheckerMain(ISession session,
-                                         IFileListService fileListService,
+        public FileCheckerMain(IFileListService fileListService,
                                          IFileHashService fileHashService,
                                          IResultsOutputService resultsOutputService)
         {
-            _session = session;
             _fileListService = fileListService;
             _fileHashService = fileHashService;
             _resultsOutputService = resultsOutputService;
         }
 
-        public void Go()
+        public void Go(ComparisonSettings settings)
         {
-            _fileListService.PopulateFileList(_session.Settings.PathToCheckLeft, _session.Settings.PathToCheckRight);
+            _fileListService.PopulateFileList(settings);
 
             var filePairs = _fileListService.GetFilesInBothSides().ToList();
             PopulateFileHashValues(filePairs);
@@ -38,7 +35,7 @@ namespace FileChecker
 
             var results = new ComparisonResults(filePairs, filesOnlyInLeft, filesOnlyInRight);
 
-            _resultsOutputService.OutputResults(results, _session.Settings);
+            _resultsOutputService.OutputResults(results, settings);
         }
 
         private void PopulateFileHashValues(IEnumerable<FilePair> filePairs)

@@ -63,8 +63,6 @@
   <ItemGroup>
     <Compile Include="Bootstrapper.cs" />
     <Compile Include="Entities\ComparisonResults.cs" />
-    <Compile Include="Entities\ISession.cs" />
-    <Compile Include="Entities\Session.cs" />
     <Compile Include="Entities\ValidationResult.cs" />
     <Compile Include="Entities\ComparisonSettings.cs" />
     <Compile Include="Entities\FileItem.cs" />

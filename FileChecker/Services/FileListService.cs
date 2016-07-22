@@ -9,24 +9,22 @@ namespace FileChecker.Services
 {
     public class FileListService : IFileListService
     {
-        private readonly ISession _session;
         private ReadOnlyCollection<FileItem> _leftSideFiles;
         private ReadOnlyCollection<FileItem> _rightSideFiles;
         private readonly IEqualityComparer<FileItem> _comparer;
 
-        public FileListService(ISession session, IEqualityComparer<FileItem> comparer)
+        public FileListService(IEqualityComparer<FileItem> comparer)
         {
-            _session = session;
             _comparer = comparer;
         }
 
-        public void PopulateFileList(string leftFolderPath, string rightFolderPath)
+        public void PopulateFileList(ComparisonSettings settings)
         {
             // get left side list of files
-            _leftSideFiles = GetFileList(leftFolderPath, _session.Settings.PathToCheckLeft).OrderBy(f => f.FullName).ToList().AsReadOnly();
+            _leftSideFiles = GetFileList(settings.PathToCheckLeft).OrderBy(f => f.FullName).ToList().AsReadOnly();
 
             // get right side list of files
-            _rightSideFiles = GetFileList(rightFolderPath, _session.Settings.PathToCheckRight).OrderBy(f => f.FullName).ToList().AsReadOnly();
+            _rightSideFiles = GetFileList(settings.PathToCheckRight).OrderBy(f => f.FullName).ToList().AsReadOnly();
         }
 
 
@@ -53,10 +51,10 @@ namespace FileChecker.Services
         }
 
 
-        private IEnumerable<FileItem> GetFileList(string folderPath, string baseFolderPath)
+        private IEnumerable<FileItem> GetFileList(string folderPath)
         {
             var directoryInfo = new DirectoryInfo(folderPath);
-            return directoryInfo.EnumerateFiles("*.*", SearchOption.AllDirectories).AsParallel().Select(i => new FileItem(i, baseFolderPath));
+            return directoryInfo.EnumerateFiles("*.*", SearchOption.AllDirectories).AsParallel().Select(i => new FileItem(i, folderPath));
         }
 
         private void Validate()

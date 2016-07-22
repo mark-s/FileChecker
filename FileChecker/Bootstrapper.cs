@@ -10,15 +10,18 @@ namespace FileChecker
     public class Bootstrapper
     {
         private readonly Container _container;
+        private ComparisonSettings _settings;
 
         public Bootstrapper(Container container)
         {
             _container = container;
         }
 
-        public void Run()
+        public void Run(ComparisonSettings settings)
         {
             LogTo.Info("Running Bootstrapper");
+
+            _settings = settings;
 
             RegisterServices();
 
@@ -32,7 +35,6 @@ namespace FileChecker
             
              _container.Register<IProgramArgumentsValidator, ProgramArgumentsValidator>(Lifestyle.Singleton);
              _container.Register<IProgramArgumentsParser, ProgramArgumentsParser>(Lifestyle.Singleton);
-             _container.Register<ISession, Session>(Lifestyle.Singleton);
              _container.Register<IFileHashService, FileHashService>(Lifestyle.Singleton);
              _container.Register<IEqualityComparer<FileItem>, FileItemComparer>(Lifestyle.Singleton);
              _container.Register<IFileListService, FileListService>(Lifestyle.Singleton);
@@ -41,28 +43,16 @@ namespace FileChecker
             LogTo.Info("Registering Services - END");
         }
 
-        public ComparisonSettings SetProgramConfig(string[] args)
-        {
-            // parse the args to get the settings file location 
-            var parser =  _container.GetInstance<IProgramArgumentsParser>();
-            var settingsFile = parser.GetSettingsFileLocation(args);
 
-            // and then load the settings from the file and put them in the session
-            var settingsLoader = new JsonSettingsLoader();
-            var session = _container.GetInstance<ISession>();
-            session.Settings = settingsLoader.GetStoredSettings(settingsFile);
 
-            return session.Settings;
-        }
-
-        public void SetupOutput(ComparisonSettings settings)
+        public void SetupOutput()
         {
             var outputService =_container.GetInstance<IResultsOutputService>();
             outputService.AddOutputter(new ResultsConsoleWriter());
-            outputService.AddOutputter(new ResultsFileWriter(settings));
+            outputService.AddOutputter(new ResultsFileWriter(_settings));
 
-            if (settings.SendEmailWhenDone)
-                outputService.AddOutputter(new EmailSender(settings));
+            if (_settings.SendEmailWhenDone)
+                outputService.AddOutputter(new EmailSender(_settings));
         }
 
         public IFileCheckerMain GetMainRunner()
